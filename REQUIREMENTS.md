@@ -28,6 +28,8 @@ The CLI, GitHub-only scope, review-only pull requests, and language families wer
 - **FR-7.10** The system MUST report the pull request URL after successful publication.
 - **FR-7.11** The system MUST NOT create a pull request when no verified changes remain.
 - **FR-7.12** The system MUST report a publication failure without reporting the run as successful.
+- **FR-7.13** The system MUST bind publication to the verified final content, immutable repository identity, selected base and run-specific working branch, and invalidate publication eligibility when any bound content changes. [T-008](THREAT_MODEL.md#t-008), [T-018](THREAT_MODEL.md#t-018) [T-005](THREAT_MODEL.md#t-005), [T-019](THREAT_MODEL.md#t-019)
+- **FR-7.14** The system MUST reconcile an ambiguous publication outcome before retrying and MUST NOT create a second pull request for the same run. [T-005](THREAT_MODEL.md#t-005), [T-019](THREAT_MODEL.md#t-019)
 
 ### Supported Projects and Verification Inputs
 
@@ -43,6 +45,12 @@ The CLI, GitHub-only scope, review-only pull requests, and language families wer
 - **FR-8.10** The system MUST require operator-supplied acceptance assertions for each representative runtime flow.
 - **FR-8.11** The system MUST report missing commands, assertions, or required tools before dependency changes start.
 - **FR-8.12** The system MUST use the project’s existing packaging checks to verify production exclusions; when those checks are absent, it MUST leave production scope unchanged.
+- **FR-8.13** The system MUST reject execution before project commands run if the execution containment and finite resource profile specified in SECURITY.md cannot be enforced. [T-001](THREAT_MODEL.md#t-001), [T-007](THREAT_MODEL.md#t-007), [T-011](THREAT_MODEL.md#t-011), [T-017](THREAT_MODEL.md#t-017) [T-006](THREAT_MODEL.md#t-006)
+- **FR-8.14** The system MUST perform dependency intelligence analysis locally and MUST NOT transmit repository content to a remote analysis or model provider. [T-003](THREAT_MODEL.md#t-003), [T-009](THREAT_MODEL.md#t-009), [T-010](THREAT_MODEL.md#t-010)
+- **FR-8.15** The system MUST retain or defer a candidate when required analysis, source transformation, documentation or existing SBOM format support is incomplete; a scanner assertion alone MUST NOT satisfy the usage investigation. [T-016](THREAT_MODEL.md#t-016)
+- **FR-8.16** The system MUST associate verification declarations with their build roots, run all declared required baseline checks, and run the selected roots’ required checks after each candidate, including global checks for cross-root changes. [T-008](THREAT_MODEL.md#t-008), [T-018](THREAT_MODEL.md#t-018)
+
+- **FR-8.17** The system MUST require positive finite operator-supplied limits for repository bytes and file count, graph nodes and edges, process count, CPU time, memory, disk, operation elapsed time, captured output, and API request/response bytes before execution; absent or unenforceable limits MUST fail preflight. Limits are operator constraints, not measured safe capacities. [T-006](THREAT_MODEL.md#t-006)
 
 ### Baseline and Unused Dependencies
 
@@ -124,6 +132,8 @@ The CLI, GitHub-only scope, review-only pull requests, and language families wer
 - **FR-6.18** The system MUST report each dependency graph as a sorted list of package names, resolved versions, dependency edges, and production or non-production scope, with before and after package counts.
 - **FR-6.19** The system MUST label checks PASS, FAIL, NOT RUN, or NOT APPLICABLE; each label other than PASS MUST include a reason.
 - **FR-6.20** The system MUST identify the base revision, toolchain versions, commands, and expected and actual check results in its report.
+- **FR-6.21** The system MUST render untrusted report content as inert data under DESIGN.md and MUST visibly identify redaction while preserving the required structural evidence. If required evidence cannot be represented safely, it MUST block publication and explain the evidence limitation. [T-004](THREAT_MODEL.md#t-004), [T-013](THREAT_MODEL.md#t-013), [T-014](THREAT_MODEL.md#t-014) [T-003](THREAT_MODEL.md#t-003), [T-009](THREAT_MODEL.md#t-009), [T-010](THREAT_MODEL.md#t-010)
+- **FR-6.22** The system MUST require an explicit report destination before project execution and MUST report destination failures with a nonzero exit status, a safe terminal summary on standard error, and the required safe Markdown report on standard output; it MUST NOT start project execution after that preflight failure. [T-003](THREAT_MODEL.md#t-003), [T-009](THREAT_MODEL.md#t-009), [T-010](THREAT_MODEL.md#t-010)
 
 ### Failure Handling and Reproducibility
 
@@ -136,6 +146,10 @@ The CLI, GitHub-only scope, review-only pull requests, and language families wer
 - **FR-9.7** The system MUST verify two fresh installations of the final revision using the same operating system, toolchain versions, package sources, and declared configuration.
 - **FR-9.8** The system MUST compare resolved package names, versions, dependency edges, and package integrity values where available across those installations.
 - **FR-9.9** The system MUST report reproducibility as failed if those values differ or either installation changes a tracked manifest or lockfile.
+- **FR-9.10** The system MUST restore the complete candidate checkpoint across affected build roots after a rejected candidate and reverify the restored state before continuing. [T-015](THREAT_MODEL.md#t-015)
+- **FR-9.11** The system MUST bind check evidence to run identity, build root, declared toolchain and commands, and checked content; subsequent mutation MUST invalidate affected verification. [T-008](THREAT_MODEL.md#t-008), [T-018](THREAT_MODEL.md#t-018)
+- **FR-9.12** The system MUST report resource-limit violations as failed required operations, without silently truncating evidence or reporting PASS. [T-006](THREAT_MODEL.md#t-006)
+- **FR-9.13** The system MUST perform the cleanup required by SECURITY.md after every outcome and MUST return a nonzero status and report a cleanup failure. [T-003](THREAT_MODEL.md#t-003), [T-009](THREAT_MODEL.md#t-009), [T-010](THREAT_MODEL.md#t-010)
 
 ## Non-Functional Requirements
 
