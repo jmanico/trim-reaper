@@ -2,66 +2,16 @@
 
 ## Secure-Coding Inputs
 
-- Read: `REQUIREMENTS.md`, `DESIGN.md`, and `ARCHITECTURE.md`. Existing root `SECURITY.md`: missing; no prior SC IDs to preserve. Read the supplied security notes and evaluated the candidate pack manifests, prompt scopes, source scopes, and transitive compositions.
-- Confirmed: non-interactive CLI; GitHub.com public/private repositories using the operator's credentials; isolated working copies; declared project toolchains; operator-supplied commands and runtime assertions; terminal and Markdown reports; verified, review-only PR publication. See REQUIREMENTS.md FR-7.1–FR-7.12, FR-8.1–FR-8.12, FR-6.16–FR-6.20, and FR-9.1–FR-9.9.
-- Confirmed boundaries: coordinator owns lifecycle/publication eligibility; core owns acceptance; GitHub adapter owns credential access and publication. Project content, command observations, and API suggestions cannot override policy (ARCHITECTURE.md, Component and Trust Boundaries; DR-4–DR-7).
-- The intelligence API is required; the notes emphasize its security but establish no authentication mechanism. API contract, authentication, hosting, transport arrangements, resource bounds, disclosure policy, and persistence are UNKNOWN or TO BE DECIDED (ARCHITECTURE.md AQ-2, AQ-3, AQ-8).
-- Node.js and Fastify are named, but the framework/runtime label conflict is TO BE DECIDED and versions are UNKNOWN (ARCHITECTURE.md AQ-1). Implementation language is unresolved. Supported target-project languages do not establish the tool's implementation language or version.
-- No separate product accounts or roles are required (REQUIREMENTS.md, Required Requirement Inputs). Better Auth, Keycloak, OPA, Zod, Prisma, and Docker are not confirmed technologies. No additional compliance obligation is stated. No browser surface is defined (DESIGN.md, Overview and Components).
-- This document specifies implementation rules, not a threat model or proof of security. Unresolved controls remain BLOCKED; candidate guidance does not establish project facts.
+- This is a pre-implementation specification. ACTIVE means a normative rule, not an implemented or verified control. No implementation exists; effectiveness remains unassessed in [THREAT_MODEL.md](THREAT_MODEL.md).
+- The initial threat assessment uses the four specifications at commit `32a2bb4f2d46915a51a424ec6610a979d55d6b24`. The decisions below are new specification choices made under the user's instruction to resolve open questions, not observations about existing code.
+- REQUIREMENTS.md owns product behavior; ARCHITECTURE.md owns components, contracts, and enforcement placement; DESIGN.md owns rendering. This file owns security rules and security decision records. Preserve original SC and OD identifiers for traceability.
+- No additional compliance obligation, product account system, browser application, or external model provider is established. Owners, measured workload capacity, implementation artifacts, and control-effectiveness evidence have not been supplied; these are evidence gaps, not unanswered design questions.
 
 ## Selected Manicode Prompts
 
-Corpus root: `/Users/jmanico/Dropbox/github/aegis/secure-coding-knowledge`. All corpus paths below are relative to that root. Resolution used `scripts/resolve_prompt.py --json` separately for each direct candidate, without substitutions or renames.
+The earlier candidate evaluation is preserved in the baseline commit and the stage-07 evidence. No version-specific pack is activated by this threat review. Architecture AQ-1 owns the selected implementation stack. Candidate Node.js 26 guidance does not apply to the selected Node.js 24 line, and the Fastify 5.12 pack's TypeScript 7 parent is not the selected JavaScript implementation. A future pack activation must verify its entire scope and composition; selecting a runtime family is not sufficient.
 
-### Direct selection evidence
-
-No direct pack is SELECTED: no authoritative project document confirms an applicable candidate version scope.
-
-- `js/nodejs/26` — TO BE DECIDED, OD-001. Node.js is named, but version and intended runtime mapping are unresolved (ARCHITECTURE.md AQ-1).
-- `js/fastify/5.12` — TO BE DECIDED, OD-001. Fastify is named, but version is UNKNOWN; the pack explicitly targets Node.js 24, not the proposed candidate Node.js 26.
-- Basic CLI — no framework pack supplied or justified; implementation framework/language remains unresolved (ARCHITECTURE.md Required Architecture Inputs, AQ-1).
-- `js/better-auth/1.7` and `jvm/keycloak/26.7` — TO BE DECIDED, OD-002. Neither is selected for API authentication; separate product accounts/roles are absent from requirements.
-- `policy/open-policy-agent/1.20` — TO BE DECIDED, OD-003. No OPA integration or gateway is specified; “general policy” does not make this technology-specific pack applicable.
-- `js/zod/4` — TO BE DECIDED, OD-003. API schemas and validation implementation are unresolved; Zod is not selected.
-- `js/prisma/7.10` — TO BE DECIDED, OD-006. No database or Prisma data layer is confirmed.
-- `infra/dockerfile/1` — TO BE DECIDED, OD-005. Containers, BuildKit, and a Linux container-build environment are not confirmed; cross-platform CLI support does not establish them.
-
-### Preamble and ordered composition
-
-Preamble, separately: `content/preamble.md`, “Applying these prompts.” It has no manifest or sources file. Its technology-independent instructions about untrusted text, not weakening protections, negative checks, and truthful verification support the ACTIVE rules below together with project requirements. Its conflict-resolution advice does not override the document authority or unresolved-conflict handling required for this file.
-
-**Eligible composition:** preamble only; no direct or transitive technology packs are activated. The following are resolved candidate orders for evaluation, not an approved stack. Each starts after the preamble; `(T)` means transitive and `(D)` direct:
-
-1. Node.js candidate: `js/javascript/ES2026` (T) → `js/nodejs/26` (D).
-2. Fastify candidate: `js/javascript/ES2026` (T) → `js/nodejs/24` (T) → `js/typescript/7` (T) → `js/fastify/5.12` (D).
-3. Better Auth candidate: `js/javascript/ES2026` (T) → `js/nodejs/24` (T) → `js/typescript/7` (T) → `js/better-auth/1.7` (D).
-4. Keycloak candidate: `jvm/java/25` (T) → `jvm/keycloak/26.7` (D).
-5. OPA candidate: `policy/open-policy-agent/1.20` (D); no parents.
-6. Zod candidate: `js/javascript/ES2026` (T) → `js/typescript/7` (T) → `js/zod/4` (D).
-7. Prisma candidate: `js/javascript/ES2026` (T) → `js/nodejs/24` (T) → `js/typescript/7` (T) → `js/prisma/7.10` (D).
-8. Dockerfile candidate: `infra/dockerfile/1` (D); no parents.
-
-Transitive eligibility is also unresolved: ES2026 and TypeScript 7 are not confirmed implementation targets; Node.js 24 is not confirmed and differs from the direct runtime candidate. Java 25 is not established by support for Java target projects. Keycloak's Java parent applies to Java 25 extensions, not automatically to a stock server. No parent is activated merely because a candidate includes it (OD-001, OD-002).
-
-### Resolved prompt/source provenance
-
-Each entry records prompt, then source path. These are evaluation sources, not active rule evidence unless explicitly cited as eligible.
-
-- Node.js 26: `content/js/nodejs/26/prompt.md`; `content/js/nodejs/26/sources.md`.
-- Fastify: `content/js/fastify/5.12/prompt.md`; `content/js/fastify/5.12/sources.md`.
-- Better Auth: `content/js/better-auth/1.7/prompt.md`; `content/js/better-auth/1.7/sources.md`.
-- Keycloak: `content/jvm/keycloak/26.7/prompt.md`; `content/jvm/keycloak/26.7/sources.md`.
-- OPA: `content/policy/open-policy-agent/1.20/prompt.md`; `content/policy/open-policy-agent/1.20/sources.md`.
-- Zod: `content/js/zod/4/prompt.md`; `content/js/zod/4/sources.md`.
-- Prisma: `content/js/prisma/7.10/prompt.md`; `content/js/prisma/7.10/sources.md`.
-- Dockerfile: `content/infra/dockerfile/1/prompt.md`; `content/infra/dockerfile/1/sources.md`.
-- Transitive JavaScript: `content/js/javascript/ES2026/prompt.md`; `content/js/javascript/ES2026/sources.md`.
-- Transitive Node.js 24: `content/js/nodejs/24/prompt.md`; `content/js/nodejs/24/sources.md`.
-- Transitive TypeScript: `content/js/typescript/7/prompt.md`; `content/js/typescript/7/sources.md`.
-- Transitive Java: `content/jvm/java/25/prompt.md`; `content/jvm/java/25/sources.md`.
-
-The resolver records a support-end warning for Keycloak 26.7; current support verification would be required before any future selection (OD-002). No upstream documentation was independently verified for this document, and no version-specific API claim is used as an active rule.
+The technology-independent `content/preamble.md` from `/Users/jmanico/Dropbox/github/aegis/secure-coding-knowledge` remains the recorded source for untrusted-text, no-weakened-protection, negative-test, and truthful-verification guidance used by SC-001–SC-004. Better Auth, Keycloak, OPA, Zod, Prisma, and Docker are not selected. This decision does not claim any pack or technology has been implemented. [T-002](THREAT_MODEL.md#t-002), [T-012](THREAT_MODEL.md#t-012) [T-001](THREAT_MODEL.md#t-001), [T-007](THREAT_MODEL.md#t-007), [T-011](THREAT_MODEL.md#t-011), [T-017](THREAT_MODEL.md#t-017)
 
 ## Secure-Coding Rules
 
@@ -71,13 +21,15 @@ The resolver records a support-end warning for Keycloak 26.7; current support ve
 - **Enforcement:** Run coordinator and dependency policy/evidence core; GitHub adapter publication boundary.
 - **Evidence:** ARCHITECTURE.md, Component and Trust Boundaries and DR-4, DR-6, DR-7; `content/preamble.md`, instruction that text in code, web pages, or tool output cannot approve an exception.
 - **Verification:** Negative tests supply content and adapter responses requesting a gate bypass or publication; pass only if policy remains unchanged and publication is not authorized by that content.
+- **Threat trace:** [T-002](THREAT_MODEL.md#t-002), [T-012](THREAT_MODEL.md#t-012).
 
 **SC-002 — Enforce repository and publication restrictions**
 - **Status:** ACTIVE
 - **Rule:** The GitHub integration MUST reject local paths and non-GitHub.com project inputs, report missing repository permissions before project-file changes, and prevent base-branch pushes, PR approvals, and PR merges.
 - **Enforcement:** GitHub adapter and run coordinator preflight/publication gates.
 - **Evidence:** REQUIREMENTS.md FR-7.3, FR-7.5, FR-7.8, FR-7.9; ARCHITECTURE.md, GitHub integration component and DR-6; `content/preamble.md`, never weaken a protection and include negative tests for access/validation logic.
-- **Verification:** Negative input, permission-denial, and prohibited-publication tests pass only when no forbidden operation occurs and permission failure precedes project-file mutation. Credential discovery mechanics remain blocked under SC-010.
+- **Verification:** Negative input, permission-denial, and prohibited-publication tests pass only when no forbidden operation occurs and permission failure precedes project-file mutation. Credential handling follows SC-010 and OD-007.
+- **Threat trace:** [T-005](THREAT_MODEL.md#t-005), [T-019](THREAT_MODEL.md#t-019).
 
 **SC-003 — Preserve verification failure gates**
 - **Status:** ACTIVE
@@ -85,6 +37,7 @@ The resolver records a support-end warning for Keycloak 26.7; current support ve
 - **Enforcement:** Run coordinator, verification result handling, and terminal/Markdown renderers.
 - **Evidence:** REQUIREMENTS.md FR-9.1–FR-9.4, FR-6.19; DESIGN.md, Verification evidence; ARCHITECTURE.md DR-4; `content/preamble.md`, never weaken a protection and never claim an unrun check passed.
 - **Verification:** Inject failed and unavailable checks at each stage; pass only if required state transitions stop, candidate restoration is checked before continuation, publication stays blocked, and non-PASS results include reasons.
+- **Threat trace:** [T-008](THREAT_MODEL.md#t-008), [T-018](THREAT_MODEL.md#t-018).
 
 **SC-004 — Preserve sensitive library implementations**
 - **Status:** ACTIVE
@@ -92,73 +45,109 @@ The resolver records a support-end warning for Keycloak 26.7; current support ve
 - **Enforcement:** Dependency policy/evidence core and candidate acceptance gate.
 - **Evidence:** REQUIREMENTS.md FR-2.8–FR-2.11; ARCHITECTURE.md, Candidate evaluation; `content/preamble.md`, never weaken protections to get a test/build/request working and run checks required by the change.
 - **Verification:** Candidate tests covering each excluded function family, each scope violation, and missing comparative-test categories pass only when the candidate is retained or deferred rather than accepted. Valid non-applicable test categories require documented reasons.
+- **Threat trace:** [T-016](THREAT_MODEL.md#t-016).
 
 **SC-005 — Runtime and framework implementation controls**
-- **Status:** BLOCKED
-- **Dependency:** Confirm runtime/framework mapping, versions, implementation language, and compatible parent composition in [OD-001](#od-001--runtime-and-composition). No Node.js/Fastify API-specific instruction is active.
+- **Status:** ACTIVE (specified; implementation unverified)
+- **Rule:** Use the stack and patch-pinning policy in ARCHITECTURE.md AQ-1. Do not apply incompatible prompt-pack parents, silently upgrade target projects, or interpret a framework/runtime label as proof of compatibility.
+- **Enforcement:** Release configuration and dependency review.
+- **Decision:** OD-001.
+- **Threat trace:** [T-001](THREAT_MODEL.md#t-001), [T-007](THREAT_MODEL.md#t-007), [T-011](THREAT_MODEL.md#t-011), [T-017](THREAT_MODEL.md#t-017).
+- **Verification:** Reject unsupported/incompatible runtime combinations and unpinned release dependencies; verify the supported OS/toolchain matrix before release.
 
 **SC-006 — Intelligence API authentication and authorization**
-- **Status:** BLOCKED
-- **Dependency:** API caller identity, authorization policy, credential/session model, and enforcement contract are unresolved in [OD-002](#od-002--api-identity-and-access). GitHub repository permissions do not establish API access policy.
+- **Status:** ACTIVE (specified; implementation unverified)
+- **Rule:** Apply OD-002 to every analysis request. The service has no repository mutation, command execution, GitHub credential, publication, or policy-override capability.
+- **Enforcement:** Intelligence adapter and service request boundary.
+- **Decision:** OD-002.
+- **Threat trace:** [T-020](THREAT_MODEL.md#t-020).
+- **Verification:** Reject absent, wrong, expired, cross-run capabilities and unexpected authority/origin; confirm project workers cannot reach the API and cannot obtain its capability.
 
 **SC-007 — API validation, transport, errors, and resource controls**
-- **Status:** BLOCKED
-- **Dependency:** Request/response contracts, transport boundary, exposure, error contract, and resource decisions are unresolved in [OD-003](#od-003--api-contract-and-enforcement) and [OD-004](#od-004--api-transport-and-capacity); version-specific mechanisms also depend on OD-001.
+- **Status:** ACTIVE (specified; implementation unverified)
+- **Rule:** Validate both requests and responses against the application-owned contract before use; reject unknown operations, unexpected fields, invalid identifiers and cross-run results. Apply OD-003 and OD-004; never interpret timeout, over-limit, unavailable, or malformed responses as successful analysis.
+- **Enforcement:** CLI intelligence adapter, service boundary, and coordinator.
+- **Decision:** OD-003, OD-004.
+- **Threat trace:** [T-006](THREAT_MODEL.md#t-006), [T-020](THREAT_MODEL.md#t-020).
+- **Verification:** Exercise malformed and oversized payloads, wrong run/revision identifiers, unknown operations, cancellation and response-limit failures; policy must retain or defer affected candidates and stop any unavailable required check.
 
 **SC-008 — Project command and filesystem isolation**
-- **Status:** BLOCKED
-- **Dependency:** Command representation, process execution, path handling, and isolation mechanisms across supported operating systems are unresolved in [OD-005](#od-005--execution-and-filesystem-boundaries). An isolated working copy is not an execution sandbox.
+- **Status:** ACTIVE (specified; implementation unverified)
+- **Rule:** Apply OD-005 before running any repository-controlled wrapper, package hook, command, assertion interpreter, or build tool. Missing containment blocks execution; a working copy is not containment.
+- **Enforcement:** Workspace adapter, execution adapter, and coordinator preflight.
+- **Decision:** OD-005.
+- **Threat trace:** [T-001](THREAT_MODEL.md#t-001), [T-007](THREAT_MODEL.md#t-007), [T-011](THREAT_MODEL.md#t-011), [T-017](THREAT_MODEL.md#t-017).
+- **Verification:** For every supported OS, test host-file/credential isolation, process-tree termination, path and link rejection, and export restrictions. If a required property cannot be demonstrated, fail preflight on that platform.
 
 **SC-009 — Analysis data and artifact confidentiality**
-- **Status:** BLOCKED
-- **Dependency:** Allowed API disclosures, retained data, report/log handling, artifact access, cleanup, and persistence decisions are unresolved in [OD-006](#od-006--data-handling-and-persistence).
+- **Status:** ACTIVE (specified; implementation unverified)
+- **Rule:** Apply OD-006 before data enters the service, logs, terminal, Markdown, or GitHub. Do not expose GitHub credentials, command secrets, host environment, or raw private source through diagnostics.
+- **Enforcement:** Intelligence adapter, run-artifact boundary, renderers, and GitHub adapter.
+- **Decision:** OD-006.
+- **Threat trace:** [T-003](THREAT_MODEL.md#t-003), [T-009](THREAT_MODEL.md#t-009), [T-010](THREAT_MODEL.md#t-010).
+- **Verification:** Use seeded sensitive values in inputs, outputs and failures; confirm absence from public reports, logs and API payloads outside the allowlist, and confirm access restrictions and cleanup. Do not claim a scanner can recognize every secret.
 
 **SC-010 — GitHub credential handling and publication recovery**
-- **Status:** BLOCKED
-- **Dependency:** Credential acquisition, preflight implementation, and partial-publication recovery require [OD-007](#od-007--github-integration-mechanics). SC-002's restrictions remain active.
+- **Status:** ACTIVE (specified; implementation unverified)
+- **Rule:** Apply OD-007. Accept publication only for the exact repository identity, base branch, run branch, final tree/revision and report digest authorized by the coordinator. Any mutation invalidates authorization.
+- **Enforcement:** GitHub adapter and coordinator final gate.
+- **Decision:** OD-007.
+- **Threat trace:** [T-005](THREAT_MODEL.md#t-005), [T-019](THREAT_MODEL.md#t-019).
+- **Verification:** Test repository/branch substitution, concurrent mutation, expired permission, interrupted push/PR creation and ambiguous responses. Reconciliation must avoid duplicate PRs, base pushes and false success.
 
 **SC-011 — Untrusted terminal and Markdown text**
-- **Status:** BLOCKED
-- **Dependency:** Rendering rules for control characters, Markdown syntax, and sensitive command/output content require [OD-008](#od-008--report-rendering). Do not infer browser controls or a sanitizer dependency from a Markdown output surface.
+- **Status:** ACTIVE (specified; implementation unverified)
+- **Rule:** Use DESIGN.md Security-relevant rendering and OD-008. Project text is literal evidence and cannot create statuses, headings, links, instructions or terminal control effects.
+- **Enforcement:** Terminal and Markdown renderers.
+- **Decision:** OD-008.
+- **Threat trace:** [T-004](THREAT_MODEL.md#t-004), [T-013](THREAT_MODEL.md#t-013), [T-014](THREAT_MODEL.md#t-014).
+- **Verification:** Test control characters, bidirectional formatting, delimiter characters, links, raw HTML and forged result labels; preserve reversible non-secret values and trusted status labels in each output medium.
 
-## Open Security Decisions
+**SC-012 — Bind verification evidence to the published state**
+- **Status:** ACTIVE (specified; implementation unverified)
+- **Rule:** Bind observations to run ID, selected base revision, complete candidate workspace digest, root, command/assertion contract, tool versions and relevant declared configuration. Keep coordinator-owned records inaccessible to project processes. Invalidate affected evidence after any mutation; failed restoration or incomplete evidence blocks publication.
+- **Enforcement:** Run coordinator, immutable evidence store and GitHub publication gate.
+- **Decision:** OD-005, OD-007.
+- **Threat trace:** [T-008](THREAT_MODEL.md#t-008), [T-018](THREAT_MODEL.md#t-018).
+- **Verification:** Test forged tool status text, stale check results, post-check file mutation and cross-root restoration. Only coordinator-recorded process observations and assertions for the final state may authorize publication.
+
+## Security Decision Records
+
+The former open questions are closed by the decisions below. CLOSED means the specification choice is made; it does not close the implementation-evidence gaps in THREAT_MODEL.md. If implementation reveals that a mitigation needs a new unresolved security decision, add an OD entry and mark the affected rule BLOCKED until that decision is resolved. No exception may silently weaken a rule.
 
 ### OD-001 — Runtime and composition
-- **Decision:** TO BE DECIDED. Resolve ARCHITECTURE.md AQ-1's Node.js/Fastify label conflict and document actual runtime, framework, language, and version scopes. Then verify candidate source scopes and parent compatibility. Fastify's Node.js 24/TypeScript 7 composition is not automatically compatible with, or overridden by, the candidate Node.js 26.
-- **Affected:** SC-005; version-specific portions of SC-007 and SC-008. Candidates: Node.js 26, Fastify 5.12, transitive Node.js 24, TypeScript 7, JavaScript ES2026.
-- **Owner:** UNKNOWN.
+- **Status:** CLOSED — stack selection is owned by ARCHITECTURE.md AQ-1. Version-specific pack activation requires exact scope and parent compatibility; no incompatible composition is authorized.
+- **Affected:** SC-005; SC-007, SC-008 where runtime-specific. [T-001](THREAT_MODEL.md#t-001), [T-007](THREAT_MODEL.md#t-007), [T-011](THREAT_MODEL.md#t-011), [T-017](THREAT_MODEL.md#t-017)
 
 ### OD-002 — API identity and access
-- **Decision:** TO BE DECIDED. ARCHITECTURE.md AQ-2 leaves API authentication undefined. Document callers, permitted operations, authorization inputs, and credential/session lifecycle consistent with REQUIREMENTS.md's existing GitHub identity and no separate accounts/roles. Better Auth and Keycloak are candidates, not facts; their account/browser features cannot establish requirements. If selected, confirm version/support and parent applicability, including the Keycloak resolver's recorded support warning and conditional Java 25 extension scope.
-- **Affected:** SC-006; Better Auth 1.7, Keycloak 26.7, Java 25 and shared JS parents.
-- **Owner:** UNKNOWN.
+- **Status:** CLOSED — one local intelligence process per CLI run, accessible only to that run's coordinator through its adapter. Use an unpredictable, per-run capability delivered through a protected parent-child channel, never project files, command arguments, inherited project environment, reports or logs. Authenticate every request and bind it to the run. Destroy it when the child exits. Check exact bound loopback authority; reject browser-origin requests and redirects. GitHub identity is not the service credential. No separate accounts, login sessions, remote clients, or service-to-GitHub access.
+- **Affected:** SC-006; architecture AQ-2. [T-020](THREAT_MODEL.md#t-020)
 
 ### OD-003 — API contract and enforcement
-- **Decision:** TO BE DECIDED. Supply authoritative request/response schemas, permitted analysis operations, validation and error semantics, and API failure behavior (ARCHITECTURE.md AQ-2). Document any validation library or policy-engine selection and applicable versions before activating Zod or OPA guidance. No gateway is currently confirmed.
-- **Affected:** SC-007; Fastify 5.12, Zod 4, OPA 1.20 and eligible parents.
-- **Owner:** UNKNOWN.
+- **Status:** CLOSED — application-owned, versioned analysis request/response records are the sole accepted contract (ARCHITECTURE.md AQ-2). Reject unknown fields and operations rather than interpreting free text. Service results are candidate evidence only; core policy rechecks scope and usage evidence and coordinator verifies every accepted change. The service must not execute supplied commands, fetch supplied URLs, or evaluate text as code. Return stable error categories without stack traces or raw payloads. No policy engine or additional validation framework is selected.
+- **Affected:** SC-001, SC-007. [T-002](THREAT_MODEL.md#t-002), [T-012](THREAT_MODEL.md#t-012) [T-020](THREAT_MODEL.md#t-020)
 
 ### OD-004 — API transport and capacity
-- **Decision:** UNKNOWN hosting/exposure and capacity; TO BE DECIDED transport enforcement, outbound destinations, and resource limits. Document the API/client transport responsibilities and workload-derived bounds before choosing implementation controls or configuration values (ARCHITECTURE.md AQ-2, AQ-3, AQ-8). Browser cookies, CORS, CSRF, and proxy handling are not established by the CLI/API surfaces alone.
-- **Affected:** SC-007; runtime/framework transport, availability, and conditional browser/proxy coverage.
-- **Owner:** UNKNOWN.
+- **Status:** CLOSED — service binds an OS-assigned port on a numeric loopback address only; its endpoint is delivered by the protected parent-child channel, never a project-controlled URL. HTTP is restricted to this authenticated same-host channel; remote API hosting is excluded. Project execution has no route to this control plane. GitHub transport requires authenticated encrypted transport and endpoint identity validation; credentials never follow a redirect to another authority. Package egress uses only operator-authorized sources under OD-005. Use the mandatory finite resource profile in REQUIREMENTS.md FR-8.17; reject missing, invalid or unenforceable bounds before work. Limit exhaustion is a failed or unavailable required check, never a silently truncated successful result. One execution job and one intelligence request at a time; no unbounded work queue.
+- **Affected:** SC-007, SC-008; architecture AQ-8. No measured capacity or numerical safety threshold is claimed. [T-006](THREAT_MODEL.md#t-006) [T-020](THREAT_MODEL.md#t-020)
 
 ### OD-005 — Execution and filesystem boundaries
-- **Decision:** TO BE DECIDED. Specify the command/assertion representation, working-copy/path access rules, process privileges and environment, and execution containment for declared tools and repository code on supported operating systems (ARCHITECTURE.md AQ-3, AQ-5, AQ-6; REQUIREMENTS.md FR-8.5–FR-8.11, NFR-1.5). Confirm containers and their applicable build/runtime scope before selecting Dockerfile guidance; do not substitute container assumptions for these decisions.
-- **Affected:** SC-008; Node.js candidates and Dockerfile 1. Project toolchain upgrades are forbidden by FR-8.5; candidate pack upgrade advice cannot authorize upgrading analyzed projects.
-- **Owner:** UNKNOWN.
+- **Status:** CLOSED — repository execution uses a disposable OS virtual machine matching the selected project OS. The execution adapter must enforce the same contract on Linux, macOS and Windows: no host home, credential store, control-plane sockets, shared writable mounts or inherited host secrets; an unprivileged guest identity; only coordinator-created workspace and scratch storage; explicit per-run resources and egress destinations. Provision declared tools without upgrades. Required private-package credentials, if supplied, are narrowly scoped guest-only inputs and are never GitHub publication credentials. No project execution occurs on the host as a fallback.
+- Commands are executable/argument arrays with a root-relative working directory and an explicit environment allowlist (architecture AQ-5); never concatenate project text into a shell command. Explicit operator-selected interpreters are still untrusted guest execution. Canonicalize paths against the selected workspace, reject path escapes, link/reparse-point traversal outside it and unsafe exported entry types. Imports/exports must enforce those checks independently of guest claims. Treat repository-controlled Git hooks/configuration, submodules and external content as untrusted execution/input; do not activate hooks or follow additional repositories automatically.
+- Stop the whole process tree before accepting/exporting a checkpoint. Export only regular project files and supported links proven confined to the workspace; reject control metadata and unauthorized file changes. The coordinator creates and owns evidence and checkpoint records outside guest write access. If containment, tool availability, path safety or full restoration cannot be enforced, fail preflight or the affected check. Concrete VM-provider integration is an implementation deliverable requiring the cross-platform conformance tests, not evidence that a provider already works.
+- **Affected:** SC-008, SC-012; architecture AQ-3, AQ-5, AQ-6. [T-001](THREAT_MODEL.md#t-001), [T-007](THREAT_MODEL.md#t-007), [T-011](THREAT_MODEL.md#t-011), [T-017](THREAT_MODEL.md#t-017) [T-008](THREAT_MODEL.md#t-008), [T-018](THREAT_MODEL.md#t-018)
 
 ### OD-006 — Data handling and persistence
-- **Decision:** TO BE DECIDED. Document which repository/configuration/evidence data may cross the API boundary and which artifacts, logs, and responses may retain or expose it; specify access and lifecycle requirements (ARCHITECTURE.md AQ-2, AQ-6). Resolve command/result reporting versus secret exposure without silently discarding required evidence (REQUIREMENTS.md FR-6.20). Persistence technology is UNKNOWN; confirm a data layer and version before considering Prisma 7.10.
-- **Affected:** SC-009, SC-011; API disclosure, diagnostics, artifact protection, and optional Prisma coverage.
-- **Owner:** UNKNOWN.
+- **Status:** CLOSED — no remote analysis, telemetry, shared database or API persistence. The local service receives only normalized dependency coordinates, graph edges, run/revision/root identifiers and structured usage facts needed by its contract. It receives no source text, environment values, credentials, raw command output or arbitrary files. Keep service data in memory for the run and destroy it on exit.
+- Store raw required evidence only in coordinator-owned, operator-private local artifacts, separated from project execution. No shared temporary filenames or project-selected artifact paths. Retain exact non-secret names, versions, commands and results in that protected evidence; keep secret input references instead of embedding secret values. Publish only a structured report assembled from allowed fields. Escape untrusted content under DESIGN.md. Redact sensitive diagnostic fields explicitly with a reason and a local evidence reference; never silently alter a PASS/FAIL result or claim redacted content was absent. If a required exact report field cannot be safely represented without disclosure, block publication and emit a blocked report identifying the conflict. A heuristic secret scan is defense in depth, not authority to publish arbitrary raw output.
+- Remove transient workspaces and service state at run end; retain the required safe report at its operator-selected destination (or FR-6.22 fallback) and retain raw evidence only if the operator separately selected a private evidence destination. Without that separate retention selection, clean transient raw evidence after producing the safe report. Report cleanup failure with nonzero outcome and the protected location needed for operator cleanup. Do not promise secure erasure, remote deletion or undo of an already published PR.
+- **Affected:** SC-009, SC-011; architecture AQ-6. [T-003](THREAT_MODEL.md#t-003), [T-009](THREAT_MODEL.md#t-009), [T-010](THREAT_MODEL.md#t-010)
 
 ### OD-007 — GitHub integration mechanics
-- **Decision:** TO BE DECIDED. Specify credential acquisition and permission preflight, branch identification, and recovery from partial publication while preserving one PR per run and the base-branch prohibition (ARCHITECTURE.md AQ-7; REQUIREMENTS.md FR-7.5, FR-7.7–FR-7.12). The GitHub adapter's ownership is confirmed; concrete credential and retry mechanisms are not.
-- **Affected:** SC-010; implementation details beneath SC-002.
-- **Owner:** UNKNOWN.
+- **Status:** CLOSED — acquire existing operator credentials through the OS credential provider or an explicitly protected input channel; never command arguments, repository configuration or plaintext reports. The GitHub adapter alone can access them. Preflight repository identity and effective permissions before project-file mutation; revalidate immediately before publication. Permission checks are observations and may become stale.
+- Resolve a canonical GitHub.com repository identity and selected immutable base revision. Reject userinfo, alternate hosts, unexpected schemes and destination changes; never use repository text to override an authenticated destination. Create a fresh run-specific branch distinct from base and other runs; do not overwrite an unrelated branch. Bind publication authorization to repository, base, run ID, branch, final revision/tree and report digest; recheck immediately before effects. Treat ambiguous network results as an unresolved publication outcome: reconcile exact remote branch and PR identity before retry, reuse the same run identity, and stop with a failure if reconciliation cannot establish the outcome. Never create another PR to recover from uncertainty, never force-push base, approve or merge.
+- **Affected:** SC-002, SC-010, SC-012; architecture AQ-7. [T-005](THREAT_MODEL.md#t-005), [T-019](THREAT_MODEL.md#t-019) [T-008](THREAT_MODEL.md#t-008), [T-018](THREAT_MODEL.md#t-018)
 
 ### OD-008 — Report rendering
-- **Decision:** TO BE DECIDED. Define how terminal control characters and Markdown metacharacters in untrusted names/results are represented while preserving exact names, untruncated evidence, plain terminal text, and host-rendered Markdown (DESIGN.md, Colors, Typography, Layout, Components). Resolve any escaping/redaction conflict with exact reporting explicitly; no rendering library or mechanism is confirmed.
-- **Affected:** SC-011; terminal/report injection and disclosure coverage, with OD-006.
-- **Owner:** UNKNOWN.
+- **Status:** CLOSED — DESIGN.md Security-relevant rendering owns the presentation contract; OD-006 owns confidentiality. Exact names/results mean reversible literal representations for non-secret values, not execution of control characters or raw Markdown. The renderer never decides result status or publication eligibility.
+- **Affected:** SC-011. [T-004](THREAT_MODEL.md#t-004), [T-013](THREAT_MODEL.md#t-013), [T-014](THREAT_MODEL.md#t-014)

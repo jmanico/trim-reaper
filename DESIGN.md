@@ -40,7 +40,7 @@ Keep colors opaque. Do not introduce gray, transparency, gradients, or additiona
 
 ## Typography
 
-Inherit the terminal’s font metrics and the Markdown renderer’s typography. Do not ship fonts or override font sizes. Use plain section labels in terminal output and semantic headings in Markdown. Preserve dependency names exactly. Do not encode verification results through typography alone.
+Inherit the terminal’s font metrics and the Markdown renderer’s typography. Do not ship fonts or override font sizes. Use plain section labels in terminal output and semantic headings in Markdown. Preserve dependency names exactly through the reversible literal representation in Security-relevant rendering ([T-004](THREAT_MODEL.md#t-004), [T-013](THREAT_MODEL.md#t-013), [T-014](THREAT_MODEL.md#t-014)). Do not encode verification results through typography alone.
 
 ## Layout
 
@@ -61,7 +61,7 @@ One solid scythe silhouette represents Trim Reaper. The curved blade and straigh
 - **Verification evidence:** Present baseline and final checks with explicit result text. Identify checks that could not run; do not present them as passed. Use PASS, FAIL, NOT RUN, and NOT APPLICABLE exactly. Include reasons for all non-PASS results. Show blocked baseline checks, rejected candidates, and publication failures in text, following FR-9.1–FR-9.6.
 - **Brand mark:** Use the root logo.svg with its title and viewBox intact. Keep the white backing and black silhouette. Supply an accessible name appropriate to the host medium.
 
-These are implementation-neutral content patterns. No prompts, menus, progress animations, or graphical interaction states apply. Print the pull request URL on publication; otherwise explain why no pull request was created.
+These are implementation-neutral content patterns. No prompts, menus, progress animations, or graphical interaction states apply. Print the validated pull request URL on confirmed publication; otherwise explain why publication was blocked, unnecessary, failed or remains unconfirmed ([T-005](THREAT_MODEL.md#t-005), [T-019](THREAT_MODEL.md#t-019)).
 
 ## Do's and Don'ts
 
@@ -70,3 +70,13 @@ These are implementation-neutral content patterns. No prompts, menus, progress a
 - Do retain all report categories when content wraps or the presentation medium changes.
 - Do check every future foreground/background pair against the stated contrast thresholds.
 - Do not add screens, actions, numerical targets, or behavior absent from REQUIREMENTS.md.
+
+## Security-relevant rendering
+
+These presentation decisions resolve SECURITY.md OD-008; confidentiality and retention belong to OD-006. They are specified behavior, not tested renderer properties. [T-004](THREAT_MODEL.md#t-004), [T-013](THREAT_MODEL.md#t-013), [T-014](THREAT_MODEL.md#t-014) [T-003](THREAT_MODEL.md#t-003), [T-009](THREAT_MODEL.md#t-009), [T-010](THREAT_MODEL.md#t-010)
+
+- Treat repository names, dependency names, commands, results and service text as literal data in labeled fields. Trusted labels and PASS, FAIL, NOT RUN and NOT APPLICABLE come only from the coordinator's recorded outcome. Separate quoted observations from check status; text resembling a status cannot create another result.
+- Preserve exact non-secret values through an unambiguous reversible representation: escape backslashes before escaping control characters and bidirectional/invisible formatting characters as visible Unicode code-point sequences. Line breaks inside a field are represented visibly so they cannot introduce labels. This representation preserves names and results without executing terminal controls and without truncation.
+- Markdown renderers escape all field metacharacters and HTML delimiters for the destination context. Do not permit untrusted raw HTML, images, autolinks, headings or link destinations. Use literal labeled fields; use a delimiter-safe literal block only when its enclosing delimiters cannot be terminated by the data. Test the host-rendered result. The trusted publication URL is the sole automatically linked outcome and must come from the GitHub adapter's validated receipt.
+- Show redaction markers with the field name, reason and protected local evidence reference under OD-006. Do not publish local filesystem locations or raw evidence as a link. Redaction is distinct from missing evidence and from a successful check. When exact required report content cannot safely be published, show a blocked publication result; never silently substitute fabricated evidence.
+- Show preflight containment/resource failures, stale evidence, failed cleanup and ambiguous publication explicitly with the affected stage and next required operator action. Do not claim a PR was absent when publication outcome is unknown. A safe report must still use the required category order and exact status vocabulary. [T-005](THREAT_MODEL.md#t-005), [T-019](THREAT_MODEL.md#t-019) [T-008](THREAT_MODEL.md#t-008), [T-018](THREAT_MODEL.md#t-018) [T-006](THREAT_MODEL.md#t-006)

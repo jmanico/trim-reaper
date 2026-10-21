@@ -9,6 +9,9 @@
 <p align="center">
   <a href="REQUIREMENTS.md">Requirements</a> ·
   <a href="DESIGN.md">Design</a> ·
+  <a href="ARCHITECTURE.md">Architecture</a> ·
+  <a href="SECURITY.md">Security rules</a> ·
+  <a href="THREAT_MODEL.md">Threat model</a> ·
   <a href="https://github.com/jmanico/trim-reaper/issues">Discussions via issues</a>
 </p>
 
@@ -26,7 +29,7 @@ Trim Reaper is specified as a **pure CLI for GitHub repositories**. It proposes 
 - **.NET:** NuGet through dotnet.
 - **JavaScript and TypeScript:** npm, Yarn, and pnpm.
 - **Platforms:** Linux, macOS, and Windows where the project’s toolchain supports them.
-- **Inputs:** GitHub repository URL, optional base branch, and explicit verification commands and flow assertions.
+- **Inputs:** GitHub repository URL, optional base branch, explicit verification commands and flow assertions, a private report destination, and finite execution/resource constraints.
 - **Outputs:** Plain-text summary, Markdown report, and a pull request when verified changes remain.
 
 Use the project’s declared toolchain versions. Supply missing versions explicitly. Existing GitHub credentials must allow branch creation and pull request publication.
@@ -45,6 +48,6 @@ Scanner findings are candidates for investigation. A dependency is removed only 
 
 ## Start with the specification
 
-[REQUIREMENTS.md](REQUIREMENTS.md) owns what the system must do and the first-release acceptance criteria. [DESIGN.md](DESIGN.md) defines CLI and report presentation and the logo palette. The [SVG logo](logo.svg) is a single scythe mark in black and white.
+[REQUIREMENTS.md](REQUIREMENTS.md) owns what the system must do and the first-release acceptance criteria. [DESIGN.md](DESIGN.md) defines CLI and report presentation and the logo palette. [ARCHITECTURE.md](ARCHITECTURE.md) records the selected architecture; [SECURITY.md](SECURITY.md) defines security rules. [THREAT_MODEL.md](THREAT_MODEL.md) preserves the complete pre-implementation assessment, its evidence gaps, and the subsequent specification decisions. The [SVG logo](logo.svg) is a single scythe mark in black and white.
 
 Replacement decisions consider correctness, security risks, performance, implementation effort, and ongoing maintenance. The first release permits bounded local replacements and reports larger proposals for later review. It stops on a failing baseline, undoes candidates that fail checks, and publishes only verified changes. See the requirements for the exact limits.
