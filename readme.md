@@ -16,7 +16,20 @@
 
 Trim Reaper aims to reduce third-party dependencies while preserving application behavior, error handling, and runtime compatibility.
 
-**Status: specification only.** No application implementation exists. Supported languages, package managers, runtime versions, and the user interface are UNKNOWN. Product decisions remain TO BE DECIDED in the requirements and design open questions.
+**Status: specification only.** No application implementation exists yet.
+
+Trim Reaper is specified as a **pure CLI for GitHub repositories**. It proposes verified changes through pull requests for later human review. It never merges its own pull requests.
+
+## First-release scope
+
+- **Java:** Maven and Gradle.
+- **.NET:** NuGet through dotnet.
+- **JavaScript and TypeScript:** npm, Yarn, and pnpm.
+- **Platforms:** Linux, macOS, and Windows where the project’s toolchain supports them.
+- **Inputs:** GitHub repository URL, optional base branch, and explicit verification commands and flow assertions.
+- **Outputs:** Plain-text summary, Markdown report, and a pull request when verified changes remain.
+
+Use the project’s declared toolchain versions. Supply missing versions explicitly. Existing GitHub credentials must allow branch creation and pull request publication.
 
 ## The work
 
@@ -32,6 +45,6 @@ Scanner findings are candidates for investigation. A dependency is removed only 
 
 ## Start with the specification
 
-[REQUIREMENTS.md](REQUIREMENTS.md) owns what the system must do and records unresolved acceptance criteria. [DESIGN.md](DESIGN.md) defines proposed visual presentation, tokens, and design questions. The [SVG logo](logo.svg) is a single scythe mark in black and white.
+[REQUIREMENTS.md](REQUIREMENTS.md) owns what the system must do and the first-release acceptance criteria. [DESIGN.md](DESIGN.md) defines CLI and report presentation and the logo palette. The [SVG logo](logo.svg) is a single scythe mark in black and white.
 
-Replacement decisions consider correctness, security risks, performance, implementation effort, and ongoing maintenance. The limits for substantial replacements remain open; see the requirements before implementation.
+Replacement decisions consider correctness, security risks, performance, implementation effort, and ongoing maintenance. The first release permits bounded local replacements and reports larger proposals for later review. It stops on a failing baseline, undoes candidates that fail checks, and publishes only verified changes. See the requirements for the exact limits.
