@@ -9,9 +9,28 @@
   Coming for your dependencies. They need to go.
 </p>
 
-**Eight copy-and-paste prompts** for any coding agent to help remove third-party libraries responsibly. Keep libraries that earn their place through correctness, security, or maintenance value. SCA can't flag a library you don't ship. Your dashboard may miss the drama. 😉
+**A policy for adding and upgrading libraries, plus eight copy-and-paste prompts for reducing dependencies**, usable with any coding agent. Keep libraries that earn their place through correctness, security, or maintenance value. SCA can't flag a library you don't ship. Your dashboard may miss the drama. 😉
 
 ## How to use
+
+- **When adding or upgrading libraries:** copy the [third-party library policy](#third-party-library-policy) into your project's `AGENTS.md` or equivalent persistent agent instructions.
+- **When reducing existing dependencies:** use the [dependency reduction prompts](#dependency-reduction-prompts) in your preferred coding agent.
+
+## Third-party library policy
+
+Add this section to your project's `AGENTS.md` or equivalent persistent agent instructions. If it already contains dependency guidance, reconcile the instructions into one consistent policy.
+
+```markdown
+## Third-party libraries
+
+- Before adding or upgrading a library, check its official package registry and repository live. Never select versions from model memory.
+- Use the latest stable, supported release compatible with the project. Explain any choice of an older release.
+- Choose actively maintained projects with recent maintainer activity, responsive maintainers, and ongoing support. Reject archived, deprecated, or abandoned projects.
+- Check current security advisories. Avoid versions with known applicable vulnerabilities.
+- If you cannot verify these requirements, report the blocker before adding the dependency.
+```
+
+## Dependency reduction prompts
 
 Open the project you want to trim in your preferred coding agent. Paste the shared instruction below, then work through the eight prompts in order, or choose a specific pass. Always establish a baseline first and finish with prompt 8. Review the changes before merging.
 
@@ -44,7 +63,7 @@ Open the project you want to trim in your preferred coding agent. Paste the shar
 > including checks not run. Fewer dependencies is useful only when the resulting project
 > is better.
 
-## 1. Remove unused dependencies
+### 1. Remove unused dependencies
 
 > Establish the current build and test baseline. Find and remove confirmed unused
 > dependencies. Check application code, dynamic loading, plugins, configuration,
@@ -52,28 +71,28 @@ Open the project you want to trim in your preferred coding agent. Paste the shar
 > investigate. Prune newly orphaned transitive dependencies through the package manager.
 > Verify the changes and report what was removed.
 
-## 2. Use the standard library
+### 2. Use the standard library
 
 > Find dependencies whose used functionality can be replaced directly by the language's
 > standard library or supported platform APIs. Implement those replacements, preserving
 > behavior, error handling, and runtime compatibility. Verify relevant edge cases.
 > Remove each dependency once all its uses have been replaced.
 
-## 3. Replace small, simple functionality
+### 3. Replace small, simple functionality
 
 > Find dependencies used only for simple, narrowly scoped functionality that we can
 > maintain in a small, straightforward module. Implement replacements with focused tests
 > for required behavior and edge cases. Judge simplicity by correctness and maintenance
 > burden, not just line count. Defer replacements that reveal substantial complexity.
 
-## 4. Consolidate overlapping libraries
+### 4. Consolidate overlapping libraries
 
 > Identify libraries providing overlapping capabilities. Where practical, standardize on
 > supported APIs from a library this project already requires, then remove redundant
 > dependencies. Preserve behavior and avoid significant new coupling. Explain why each
 > retained library is the better fit for the remaining requirements.
 
-## 5. Reduce transitive overhead
+### 5. Reduce transitive overhead
 
 > Find dependencies that introduce large dependency subtrees for functionality we barely
 > use. Reduce that overhead using supported minimal packages, unused
@@ -81,7 +100,7 @@ Open the project you want to trim in your preferred coding agent. Paste the shar
 > dependency graph before and after. Remove transitive packages only when no retained
 > dependency requires them.
 
-## 6. Keep development dependencies out of production
+### 6. Keep development dependencies out of production
 
 > Find libraries needed only for development, testing, or building. Correct their
 > dependency scope and exclude them from production artifacts where the deployment
@@ -89,7 +108,7 @@ Open the project you want to trim in your preferred coding agent. Paste the shar
 > clean installation. Report scope changes separately from dependencies eliminated
 > entirely.
 
-## 7. Evaluate larger replacements
+### 7. Evaluate larger replacements
 
 > Review remaining dependencies for replacements requiring more substantial work.
 > Compare implementation effort, code added, security and correctness risks,
@@ -97,7 +116,7 @@ Open the project you want to trim in your preferred coding agent. Paste the shar
 > net benefit and adequate verification. Retain libraries whose complexity or
 > specialized functionality makes replacement a poor tradeoff, and explain why.
 
-## 8. Verify and report
+### 8. Verify and report
 
 > Verify a clean reproducible installation, build, tests, and representative application
 > flows. Check that manifests, lockfiles, documentation, and any existing SBOM reflect
@@ -107,4 +126,4 @@ Open the project you want to trim in your preferred coding agent. Paste the shar
 
 ## Contributing
 
-Keep prompts clear, practical, and usable with any coding agent, language, or package manager. Improvements should help people make and verify responsible dependency reductions. Submit changes through a pull request.
+Keep prompts clear, practical, and usable with any coding agent, language, or package manager. Improvements should help people choose, maintain, and reduce dependencies responsibly, with evidence and verification. Submit changes through a pull request.
