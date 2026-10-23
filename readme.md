@@ -23,10 +23,16 @@ Add this section to your project's `AGENTS.md` or equivalent persistent agent in
 ```markdown
 ## Third-party libraries
 
+- Minimize third-party dependencies to reduce ongoing updates and maintenance. Prefer the standard library, supported platform APIs, or functionality already available in the project when they meet the requirements.
+- Add a library only when its benefits justify its ongoing maintenance, security, and upgrade costs. For simple, narrowly scoped functionality, consider a small local implementation when it is easier to maintain and verify. Retain specialized libraries when replacement would increase security, correctness, or maintenance risk, especially for cryptography, authentication, and complex parsing.
+- Inspect the resolved transitive dependency tree before adding or upgrading a library. Prefer suitable options with fewer transitive dependencies, and avoid bringing in large dependency trees for functionality the project barely uses. Explain why any substantial increase is necessary and assess its update burden.
+- When changing existing dependency usage, look for safe opportunities to remove unused or redundant libraries and unnecessary optional integrations. Preserve behavior and supported runtime compatibility, verify the changes, and explain justified retention.
 - Before adding or upgrading a library, check its official package registry and repository live. Never select versions from model memory.
 - Use the latest stable, supported release compatible with the project. Explain any choice of an older release.
 - Choose actively maintained projects with recent maintainer activity, responsive maintainers, and ongoing support. Reject archived, deprecated, or abandoned projects.
 - Check current security advisories. Avoid versions with known applicable vulnerabilities.
+- Keep updates scoped to the task. Use the project's package manager to resolve transitive dependencies; avoid unrelated upgrades, forced overrides, and manual lockfile edits that bypass compatibility constraints. Prefer a compatible parent-library update when a transitive dependency needs remediation.
+- Before updating, review release notes, migration guidance, and dependency constraints for breaking changes. Explain concrete effects on this project and the required migration work. If an update requires a broader migration or hits a compatibility blocker, stop and report the evidence and options before expanding scope. Do not repeatedly attempt speculative upgrades or fixes; resume only with new evidence or an agreed migration plan.
 - If you cannot verify these requirements, report the blocker before adding the dependency.
 ```
 
