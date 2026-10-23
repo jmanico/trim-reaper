@@ -1,5 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
   <title id="title">Trim Reaper scythe</title>
-  <rect width="128" height="128" fill="#FFFFFF"/>
-  <path fill="#000000" d="M34 18C72 12 104 30 114 64C92 42 70 35 48 38V112H34Z"/>
+  <desc id="desc">An evergreen scythe with a sweeping blade on a rounded pale sage square.</desc>
+  <rect width="160" height="160" rx="34" fill="#EDF2E9"/>
+  <g fill="#183D35">
+    <path d="M48 49 61 51 50 128a6.8 6.8 0 0 1-13.4-1.8Z"/>
+    <path d="M44 31C85 21 123 39 137 82 114 62 88 53 59 56L44 54Z"/>
+  </g>
+  <path d="M59 36c22-3 44 6 60 23-18-12-37-16-61-14Z" fill="#A7C395"/>
 </svg>

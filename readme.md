@@ -1,17 +1,29 @@
 <p align="center">
-  <img src="logo.svg" alt="Trim Reaper scythe" width="128" height="128">
+  <img src="logo.svg" alt="Trim Reaper scythe" width="120" height="120">
 </p>
 
 <h1 align="center">Trim Reaper</h1>
 
-<p align="center"><strong>Third party libraries must all die.</strong></p>
-<p align="center">Coming for your dependencies. They need to go.</p>
+<p align="center">
+  <strong>Third party libraries must all die.</strong><br>
+  Coming for your dependencies. They need to go.
+</p>
 
-A set of prompts for any coding agent to help remove third-party libraries responsibly. Keep libraries that earn their place through correctness, security, or maintenance value. SCA can't flag a library you don't ship. Your dashboard may miss the drama. 😉
+**Eight copy-and-paste prompts** for any coding agent to help remove third-party libraries responsibly. Keep libraries that earn their place through correctness, security, or maintenance value. SCA can't flag a library you don't ship. Your dashboard may miss the drama. 😉
 
 ## How to use
 
 Open the project you want to trim in your preferred coding agent. Paste the shared instruction below, then work through the eight prompts in order, or choose a specific pass. Always establish a baseline first and finish with prompt 8. Review the changes before merging.
+
+**Choose a pass:**
+[1 · Unused](#1-remove-unused-dependencies) ·
+[2 · Standard library](#2-use-the-standard-library) ·
+[3 · Simple replacements](#3-replace-small-simple-functionality) ·
+[4 · Overlap](#4-consolidate-overlapping-libraries) ·
+[5 · Transitive overhead](#5-reduce-transitive-overhead) ·
+[6 · Production scope](#6-keep-development-dependencies-out-of-production) ·
+[7 · Larger replacements](#7-evaluate-larger-replacements) ·
+[8 · Verify](#8-verify-and-report)
 
 ### Shared instruction
 
@@ -20,9 +32,13 @@ Open the project you want to trim in your preferred coding agent. Paste the shar
 > instructions and use its existing toolchain and package manager. Work in small,
 > reviewable changes and preserve unrelated work. Establish the build and test baseline
 > before editing; if required checks fail or cannot run, report the blocker and stop
-> changes. Investigate uncertain usage rather than guessing. Verify each change; undo
+> changes.
+>
+> Investigate uncertain usage rather than guessing. Verify each change; undo
 > your candidate changes if verification fails or cannot be completed. Do not weaken
-> tests or security controls to make a removal pass. Retain specialized libraries when
+> tests or security controls to make a removal pass.
+>
+> Retain specialized libraries when
 > replacing them would introduce security, correctness, or maintenance risk, especially
 > cryptography, authentication, and complex parsing. Report actual commands and results,
 > including checks not run. Fewer dependencies is useful only when the resulting project
