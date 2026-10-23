@@ -1,6 +1,6 @@
 # Agent Instructions
 
-Trim Reaper is a collection of prompts in `readme.md` for responsible dependency reduction with any coding agent.
+Trim Reaper provides a third-party library policy and dependency reduction prompts in `readme.md` for responsible dependency management with any coding agent.
 
 - Keep the project simple: plain Markdown prompts and the existing logo. Do not introduce an application, framework, or specification system.
 - Preserve the prompts' emphasis on evidence, behavior, security, compatibility, verification, and justified retention of dependencies.
