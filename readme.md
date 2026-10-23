@@ -7,9 +7,7 @@
 <p align="center"><strong>Third party libraries must all die.</strong></p>
 <p align="center">Coming for your dependencies. They need to go.</p>
 
-A set of prompts for any coding agent to help remove third-party libraries responsibly. Keep libraries that earn their place through correctness, security, or maintenance value.
-
-> SCA can't flag a library you don't ship. Your dashboard may miss the drama. 😉
+A set of prompts for any coding agent to help remove third-party libraries responsibly. Keep libraries that earn their place through correctness, security, or maintenance value. SCA can't flag a library you don't ship. Your dashboard may miss the drama. 😉
 
 ## How to use
 
