@@ -4,50 +4,69 @@
 
 <h1 align="center">Trim Reaper</h1>
 
-<p align="center"><strong>Coming for your dependencies. They need to go.</strong></p>
+<p align="center"><strong>Third party libraries must all die.</strong></p>
+<p align="center">Coming for your dependencies. They need to go.</p>
 
-<p align="center">
-  <a href="REQUIREMENTS.md">Requirements</a> ·
-  <a href="DESIGN.md">Design</a> ·
-  <a href="ARCHITECTURE.md">Architecture</a> ·
-  <a href="SECURITY.md">Security rules</a> ·
-  <a href="THREAT_MODEL.md">Threat model</a> ·
-  <a href="https://github.com/jmanico/trim-reaper/issues">Discussions via issues</a>
-</p>
+A set of prompts for any coding agent to help remove third-party libraries responsibly. Keep libraries that earn their place through correctness, security, or maintenance value.
 
----
+## How to use
 
-Trim Reaper aims to reduce third-party dependencies while preserving application behavior, error handling, and runtime compatibility.
+Open the project you want to trim in your preferred coding agent. Paste the shared instruction below, then work through the eight prompts in order, or choose a specific pass. Always establish a baseline first and finish with prompt 8. Review the changes before merging.
 
-**Status: specification only.** No application implementation exists yet.
+### Shared instruction
 
-Trim Reaper is specified as a **pure CLI for GitHub repositories**. It proposes verified changes through pull requests for later human review. It never merges its own pull requests.
+```text
+Reduce this project's dependencies while preserving behavior, error handling, security, and supported runtime compatibility. Follow the project's contributor instructions and use its existing toolchain and package manager. Work in small, reviewable changes and preserve unrelated work. Establish the build and test baseline before editing; if required checks fail or cannot run, report the blocker and stop changes. Investigate uncertain usage rather than guessing. Verify each change; undo your candidate changes if verification fails or cannot be completed. Do not weaken tests or security controls to make a removal pass. Retain specialized libraries when replacing them would introduce security, correctness, or maintenance risk, especially cryptography, authentication, and complex parsing. Report actual commands and results, including checks not run. Fewer dependencies is useful only when the resulting project is better.
+```
 
-## First-release scope
+## 1. Remove unused dependencies
 
-- **Java:** Maven and Gradle.
-- **.NET:** NuGet through dotnet.
-- **JavaScript and TypeScript:** npm, Yarn, and pnpm.
-- **Platforms:** Linux, macOS, and Windows where the project’s toolchain supports them.
-- **Inputs:** GitHub repository URL, optional base branch, explicit verification commands and flow assertions, a private report destination, and finite execution/resource constraints.
-- **Outputs:** Plain-text summary, Markdown report, and a pull request when verified changes remain.
+```text
+Establish the current build and test baseline. Find and remove confirmed unused dependencies. Check application code, dynamic loading, plugins, configuration, scripts, tests, and build/deployment tooling. Treat scanner results as candidates to investigate. Prune newly orphaned transitive dependencies through the package manager. Verify the changes and report what was removed.
+```
 
-Use the project’s declared toolchain versions. Supply missing versions explicitly. Existing GitHub credentials must allow branch creation and pull request publication.
+## 2. Use the standard library
 
-## The work
+```text
+Find dependencies whose used functionality can be replaced directly by the language's standard library or supported platform APIs. Implement those replacements, preserving behavior, error handling, and runtime compatibility. Verify relevant edge cases. Remove each dependency once all its uses have been replaced.
+```
 
-| Stage | Intended outcome |
-| --- | --- |
-| Establish the baseline | Record current build and test results. |
-| Investigate usage | Check code, dynamic loading, plugins, configuration, scripts, tests, and tooling. |
-| Reduce dependencies | Remove confirmed unused packages, replace suitable functions, and consolidate overlapping uses. |
-| Correct scope | Separate development, test, and build dependencies from production where permitted. |
-| Verify and report | Check the final installation, build, tests, and application flows; explain removals and retention. |
+## 3. Replace small, simple functionality
 
-Scanner findings are candidates for investigation. A dependency is removed only after its uses are resolved. Transitive packages remain when a retained dependency requires them.
+```text
+Find dependencies used only for simple, narrowly scoped functionality that we can maintain in a small, straightforward module. Implement replacements with focused tests for required behavior and edge cases. Judge simplicity by correctness and maintenance burden, not just line count. Defer replacements that reveal substantial complexity.
+```
 
-## Start with the specification
+## 4. Consolidate overlapping libraries
 
-[REQUIREMENTS.md](REQUIREMENTS.md) owns what the system must do and the first-release acceptance criteria. [DESIGN.md](DESIGN.md) defines CLI and report presentation and the logo palette. [ARCHITECTURE.md](ARCHITECTURE.md) records the selected architecture; [SECURITY.md](SECURITY.md) defines security rules. [THREAT_MODEL.md](THREAT_MODEL.md) preserves the complete pre-implementation assessment, its evidence gaps, and the subsequent specification decisions. The [SVG logo](logo.svg) is a single scythe mark in black and white.
+```text
+Identify libraries providing overlapping capabilities. Where practical, standardize on supported APIs from a library this project already requires, then remove redundant dependencies. Preserve behavior and avoid significant new coupling. Explain why each retained library is the better fit for the remaining requirements.
+```
 
-Replacement decisions consider correctness, security risks, performance, implementation effort, and ongoing maintenance. The first release permits bounded local replacements and reports larger proposals for later review. It stops on a failing baseline, undoes candidates that fail checks, and publishes only verified changes. See the requirements for the exact limits.
+## 5. Reduce transitive overhead
+
+```text
+Find dependencies that introduce large dependency subtrees for functionality we barely use. Reduce that overhead using supported minimal packages, unused optional-integration removal, or existing alternatives. Compare the resolved dependency graph before and after. Remove transitive packages only when no retained dependency requires them.
+```
+
+## 6. Keep development dependencies out of production
+
+```text
+Find libraries needed only for development, testing, or building. Correct their dependency scope and exclude them from production artifacts where the deployment process permits. Verify the production build and representative runtime flows from a clean installation. Report scope changes separately from dependencies eliminated entirely.
+```
+
+## 7. Evaluate larger replacements
+
+```text
+Review remaining dependencies for replacements requiring more substantial work. Compare implementation effort, code added, security and correctness risks, performance, and ongoing maintenance. Implement only bounded replacements with a clear net benefit and adequate verification. Retain libraries whose complexity or specialized functionality makes replacement a poor tradeoff, and explain why.
+```
+
+## 8. Verify and report
+
+```text
+Verify a clean reproducible installation, build, tests, and representative application flows. Check that manifests, lockfiles, documentation, and any existing SBOM reflect the final dependency graph. Summarize direct dependencies removed, transitive dependencies eliminated, production scope changes, and local code added. List retained dependencies with reasons, and clearly identify any checks you could not complete.
+```
+
+## Contributing
+
+Keep prompts clear, practical, and usable with any coding agent, language, or package manager. Improvements should help people make and verify responsible dependency reductions. Submit changes through a pull request.
