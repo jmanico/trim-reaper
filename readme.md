@@ -133,3 +133,7 @@ Open the project you want to trim in your preferred coding agent. Paste the shar
 ## Contributing
 
 Keep prompts clear, practical, and usable with any coding agent, language, or package manager. Improvements should help people choose, maintain, and reduce dependencies responsibly, with evidence and verification. Submit changes through a pull request.
+
+## License
+
+Trim Reaper, including its prompts and documentation, is licensed under the [MIT License](LICENSE). Copyright (c) 2026 Jim Manico.
