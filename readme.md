@@ -25,21 +25,23 @@ Add this section to your project's `AGENTS.md` or equivalent persistent agent in
 ## Third-party libraries
 
 - Minimize third-party dependencies to reduce ongoing updates and maintenance. Prefer the standard library, supported platform APIs, or functionality already available in the project when they meet the requirements.
-- Add a library only when its benefits justify its ongoing maintenance, security, and upgrade costs. For simple, narrowly scoped functionality, consider a small local implementation when it is easier to maintain and verify. Retain specialized libraries when replacement would increase security, correctness, or maintenance risk, especially for cryptography, authentication, and complex parsing.
+- Add a library only when its benefits justify its ongoing maintenance, security, and upgrade costs. For simple, narrowly scoped functionality, consider a small local implementation when it is easier to maintain and verify. For security-sensitive functionality, especially cryptography, authentication, and complex parsing, use or retain established libraries or vetted platform APIs rather than hand-rolling replacements. Retain other specialized libraries when replacement would increase security, correctness, or maintenance risk.
 - Inspect the resolved transitive dependency tree before adding or upgrading a library. Prefer suitable options with fewer transitive dependencies, and avoid bringing in large dependency trees for functionality the project barely uses. Explain why any substantial increase is necessary and assess its update burden.
-- When changing existing dependency usage, look for safe opportunities to remove unused or redundant libraries and unnecessary optional integrations. Preserve behavior and supported runtime compatibility, verify the changes, and explain justified retention.
-- Before adding or upgrading a library, check its official package registry and repository live. Never select versions from model memory.
-- Use the latest stable, supported release compatible with the project. Explain any choice of an older release.
+- When changing existing dependency usage, identify unused or redundant libraries and unnecessary optional integrations as removal candidates. Remove them only within the authorized task scope and after checking code, dynamic loading, plugins, configuration, scripts, tests, and build tooling. Preserve behavior and supported runtime compatibility, verify the changes, and explain justified retention.
+- Before adding or upgrading a library, verify the exact package name and publisher against the project's own documentation or repository, and check its registry entry live. Do not trust registry metadata alone. Never select package names or versions from model memory. Investigate lookalike names, unexpected ownership changes, and unfamiliar new packages before proceeding.
+- Use the latest stable, supported release compatible with the project and its release-age policy, if any. Scrutinize very recent releases and unexpected maintainer or release changes; absence of an advisory is not evidence that a release is safe. Explain any choice of an older release.
 - Assess maintenance through support status, unresolved issues, security responsiveness, and compatibility with supported runtimes. Treat release frequency as one signal; a mature, stable library may need few releases. Reject archived, deprecated, or abandoned projects.
-- Check current security advisories from official project sources and relevant advisory databases. Report the sources and date checked, affected versions, and applicability to this project. Avoid versions with known applicable vulnerabilities. If advisory lookup is unavailable, report that limitation before adding or upgrading the dependency; do not describe an unchecked version as vulnerability-free.
+- Check current security advisories from official project sources and relevant advisory databases. Report the sources and date checked, affected versions, and applicability to this project. Avoid versions with known applicable vulnerabilities. If advisory lookup is unavailable, stop and report that limitation before adding or upgrading the dependency; do not describe an unchecked version as vulnerability-free.
 - Keep updates scoped to the task. Use the project's package manager to resolve transitive dependencies; avoid unrelated upgrades, forced overrides, and manual lockfile edits that bypass compatibility constraints. Prefer a compatible parent-library update when a transitive dependency needs remediation.
 - Before updating, review release notes, migration guidance, and dependency constraints for breaking changes. Explain concrete effects on this project and the required migration work. If an update requires a broader migration or hits a compatibility blocker, stop and report the evidence and options before expanding scope. Do not repeatedly attempt speculative upgrades or fixes; resume only with new evidence or an agreed migration plan.
-- If you cannot verify these requirements, report the blocker before adding the dependency.
+- If you cannot verify these requirements, stop and report the blocker. Do not add or upgrade the dependency unless the user explicitly accepts the identified risk.
 ```
 
 ## Dependency reduction prompts
 
 Open the project you want to trim in your preferred coding agent. Paste the shared instruction below, then work through the eight prompts in order, or choose a specific pass. Always establish a baseline first and finish with prompt 8. Review the changes before merging.
+
+Each numbered pass assumes the shared instruction is already in the session.
 
 **Choose a pass:**
 [1 · Unused](#1-remove-unused-dependencies) ·
@@ -70,8 +72,9 @@ plan for review and wait for authorization before implementing changes.
 
 ```text
 Reduce this project's dependencies while preserving behavior, error handling,
-security, and supported runtime compatibility. Follow the project's contributor
-instructions and use its existing toolchain and package manager. Work in small,
+security, public API and downstream consumer compatibility, and supported runtimes.
+Follow the project's contributor instructions and use its existing toolchain and
+package manager. Work in small,
 reviewable changes and preserve unrelated work. Establish the build and test baseline
 before editing; if required checks fail or cannot run, report the blocker and stop
 changes.
@@ -80,10 +83,13 @@ Investigate uncertain usage rather than guessing. Verify each change; undo
 your candidate changes if verification fails or cannot be completed. Do not weaken
 tests or security controls to make a removal pass.
 
-Retain specialized libraries when replacing them would introduce security, correctness, or maintenance risk, especially
-cryptography, authentication, and complex parsing. Report actual commands and results,
+Retain specialized libraries when replacing them would introduce security, correctness,
+or maintenance risk, especially cryptography, authentication, and complex parsing.
+Report actual commands and results,
 including checks not run. Fewer dependencies is useful only when the resulting project
-is better.
+is better. If a pass introduces or upgrades a package, apply the third-party library
+policy above first. If that policy is not available in the session, request it before
+proceeding with the addition or upgrade.
 ```
 
 ### 1. Remove unused dependencies
@@ -101,7 +107,7 @@ Verify the changes and report what was removed.
 ```text
 Find dependencies whose used functionality can be replaced directly by the language's
 standard library or supported platform APIs. Implement those replacements, preserving
-behavior, error handling, and runtime compatibility. Verify relevant edge cases.
+behavior, error handling, security, and runtime compatibility. Verify relevant edge cases.
 Remove each dependency once all its uses have been replaced.
 ```
 
@@ -139,8 +145,9 @@ dependency requires them.
 Find libraries needed only for development, testing, or building. Correct their
 dependency scope and exclude them from production artifacts where the deployment
 process permits. Verify the production build and representative runtime flows from a
-clean installation. Report scope changes separately from dependencies eliminated
-entirely.
+clean installation. For published libraries, verify the packaged artifact in a clean
+consumer environment, including public APIs, types, and peer requirements where applicable.
+Report scope changes separately from dependencies eliminated entirely.
 ```
 
 ### 7. Evaluate larger replacements
