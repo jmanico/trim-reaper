@@ -11,6 +11,9 @@
 
 **A policy for adding and upgrading libraries, plus eight copy-and-paste prompts for reducing dependencies**, usable with any coding agent. Keep libraries that earn their place through correctness, security, or maintenance value. Removing a dependency can reduce update and supply-chain exposure, but replacing it with local code transfers maintenance and security responsibility to your project.
 
+Inspired by [Dread Ledger](https://github.com/jmanico/dread-ledger) and
+[Grim Prompter](https://github.com/jmanico/grim-prompter).
+
 ## How to use
 
 - **When adding or upgrading libraries:** copy the [third-party library policy](#third-party-library-policy) into your project's `AGENTS.md` or equivalent persistent agent instructions.
