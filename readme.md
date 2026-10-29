@@ -197,6 +197,16 @@ removed safely.
 
 Keep prompts clear, practical, and usable with any coding agent, language, or package manager. Improvements should help people choose, maintain, and reduce dependencies responsibly, with evidence and verification. Submit changes through a pull request.
 
+## About the author
+
+Created by Jim Manico of [manicode.ai](https://manicode.ai) and
+[Manicode Security](https://manicode.com).
+
+For teams looking to guide secure coding from the start,
+[manicode.ai](https://manicode.ai) offers commercial secure-coding prompts for AI
+assistants, designed to reduce avoidable security rework and the time and tokens
+spent on it.
+
 ## License
 
 Trim Reaper, including its prompts and documentation, is licensed under the [MIT License](LICENSE). Copyright (c) 2026 Jim Manico.
